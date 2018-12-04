@@ -1,19 +1,17 @@
 class Api::V1::SongsController < ApplicationController
+  before_action :find_room, only: :index
 
   def index
-    room = Room.find(params[:room_id])
-    @songs = room.songs
+    @songs = @room.songs
     render json: @songs
   end
 
   def create
     @song = Song.find_or_create_by(song_params)
     if @song.valid?
-      # add to playlist after created
-      @playlist = Playlist.create(user_id: params[:user_id], song_id: @song.id)
       render json: @song, status: 201
     else
-      render json: { errors: @song.errors.full_messages }, status: :bad_request
+      render json: { errors: @song.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -23,4 +21,7 @@ class Api::V1::SongsController < ApplicationController
     params.require(:song).permit(:youtube_id, :title)
   end
   
+  def find_room
+    @room = Room.find(params[:room_id])
+  end
 end
