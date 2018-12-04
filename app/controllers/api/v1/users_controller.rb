@@ -7,7 +7,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def create
-    byebug
     @user = @room.users.create(user_params)
     if @user.valid?
       render json: @user, status: 201

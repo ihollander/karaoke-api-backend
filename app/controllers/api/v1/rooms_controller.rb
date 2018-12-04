@@ -7,7 +7,11 @@ class Api::V1::RoomsController < ApplicationController
   end
 
   def show
-    render json: @room
+    if @room
+      render json: @room
+    else
+      render json: { message: "No room found" }, status: :not_found 
+    end
   end
 
   def create
