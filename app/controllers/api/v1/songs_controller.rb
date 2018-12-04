@@ -7,7 +7,7 @@ class Api::V1::SongsController < ApplicationController
   end
 
   def create
-    @song = Song.create(song_params)
+    @song = Song.find_or_create_by(song_params)
     if @song.valid?
       # add to playlist after created
       @playlist = Playlist.create(user_id: params[:user_id], song_id: @song.id)
