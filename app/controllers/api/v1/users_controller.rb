@@ -1,5 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :find_room, only: :show
 
   def index
     room = Room.find(params[:room_id])
@@ -19,7 +18,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:room_id, :name)
+    params.require(:user).permit(:room_id, :name)
   end
   
 end
