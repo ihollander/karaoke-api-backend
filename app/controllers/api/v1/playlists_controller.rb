@@ -1,5 +1,6 @@
 class Api::V1::PlaylistsController < ApplicationController
-  before_action :find_room
+  before_action :find_room, only: [:index, :create]
+  before_action :find_playlist, only: [:update, :destroy]
 
   def index
     @playlists = @room.playlists
@@ -7,12 +8,28 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def create
-    @playlist = Playlist.create(playlist_params)
+    sort = @room.playlists.maximum(:sort) || 0
+    my_params = playlist_params.merge(sort: sort + 1)
+    @playlist = Playlist.create(my_params)
     if @playlist.valid?
       render json: @playlist, status: 201
     else
       render json: { errors: @playlist.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def update
+    @playlist.update(sort: params[:sort])
+    if @playlist.valid?
+      render json: @playlist, status: 201
+    else
+      render json: { errors: @playlist.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @playlist.destroy
+    head :no_content 
   end
 
   private
@@ -23,6 +40,10 @@ class Api::V1::PlaylistsController < ApplicationController
 
   def find_room
     @room = Room.find(params[:room_id])
+  end
+
+  def find_playlist
+    @playlist = Playlist.find(params[:id])
   end
   
 end
