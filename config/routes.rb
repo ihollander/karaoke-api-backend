@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :rooms, only: [:index, :show, :create] do
-        resources :users, only: [:index, :create]
+        resources :users, only: [:index, :create, :destroy]
         resources :songs, only: [:index, :create]
         resources :playlists, only: [:index, :create, :destroy, :update]
       end 

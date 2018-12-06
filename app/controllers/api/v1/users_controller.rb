@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :find_room
+  before_action :find_room, only: [:index, :create]
+  before_action :find_user, only: :destroy
 
   def index
     @users = @room.users
@@ -15,6 +16,11 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def destroy 
+    @user.destroy
+    head :no_content 
+  end
+
   private
 
   def user_params
@@ -23,6 +29,10 @@ class Api::V1::UsersController < ApplicationController
   
   def find_room
     @room = Room.find(params[:room_id])
+  end
+
+  def find_user
+    @user = User.find(params[:id])
   end
 
 end
