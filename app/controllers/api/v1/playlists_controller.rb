@@ -19,7 +19,11 @@ class Api::V1::PlaylistsController < ApplicationController
   end
 
   def update
-    @playlist.update(sort: params[:sort])
+    if params[:sort]
+      @playlist.update(sort: params[:sort])
+    elsif params[:played]
+      @playlist.update(played: params[:played])
+    end
     if @playlist.valid?
       render json: @playlist, status: 201
     else
