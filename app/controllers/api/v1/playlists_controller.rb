@@ -25,7 +25,7 @@ class Api::V1::PlaylistsController < ApplicationController
       @playlist.update(played: params[:played])
     end
     if @playlist.valid?
-      render json: @playlist, status: 201
+      render json: @playlist, status: :ok
     else
       render json: { errors: @playlist.errors.full_messages }, status: :unprocessable_entity
     end
